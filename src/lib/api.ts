@@ -1,5 +1,6 @@
 import type { ChatMessage, Conversation } from "@/types/chat";
 import { ChatError } from "@/types/chat";
+import { getSessionId } from "@/lib/session";
 
 // ────────────────────────────────────────────────────────────────────────
 // DTO odpowiadające dokładnie strukturze JSON zwracanej przez backend
@@ -59,10 +60,18 @@ function wrapNetworkError(): never {
   );
 }
 
+/** Nagłówki wspólne dla każdego zapytania — identyfikują sesję przeglądarki,
+ *  wymagane przez backend do rozdzielenia rozmów różnych użytkowników. */
+function sessionHeaders(): HeadersInit {
+  return { "X-Session-Id": getSessionId() };
+}
+
 export async function fetchConversations(): Promise<Conversation[]> {
   let response: Response;
   try {
-    response = await fetch("/api/conversations");
+    response = await fetch("/api/conversations", {
+      headers: sessionHeaders(),
+    });
   } catch {
     return wrapNetworkError();
   }
@@ -73,7 +82,9 @@ export async function fetchConversations(): Promise<Conversation[]> {
 export async function fetchMessages(conversationId: string): Promise<ChatMessage[]> {
   let response: Response;
   try {
-    response = await fetch(`/api/conversations/${conversationId}/messages`);
+    response = await fetch(`/api/conversations/${conversationId}/messages`, {
+      headers: sessionHeaders(),
+    });
   } catch {
     return wrapNetworkError();
   }
@@ -86,7 +97,7 @@ export async function createConversation(title: string): Promise<Conversation> {
   try {
     response = await fetch(
         `/api/conversations?title=${encodeURIComponent(title)}`,
-        { method: "POST" }
+        { method: "POST", headers: sessionHeaders() }
     );
   } catch {
     return wrapNetworkError();
@@ -100,6 +111,7 @@ export async function deleteConversation(conversationId: string): Promise<void> 
   try {
     response = await fetch(`/api/conversations/${conversationId}`, {
       method: "DELETE",
+      headers: sessionHeaders(),
     });
   } catch {
     return wrapNetworkError();
@@ -118,7 +130,7 @@ export async function sendChatMessage(
   try {
     response = await fetch(`/api/conversations/${conversationId}/messages`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...sessionHeaders() },
       body: JSON.stringify({ content }),
     });
   } catch {
