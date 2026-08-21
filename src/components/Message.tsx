@@ -1,4 +1,4 @@
-import { AlertCircle, FlaskConical, RotateCw, User } from "lucide-react";
+import { AlertCircle, RotateCw, User } from "lucide-react";
 import type { ChatMessage } from "@/types/chat";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -21,17 +21,20 @@ export function Message({ message, onRetry }: MessageProps) {
     <div
       className={cn("flex items-start gap-3 animate-fade-in-up", isUser && "flex-row-reverse")}
     >
-      <Avatar className="mt-0.5 rounded-lg">
-        {isUser ? (
-          <AvatarFallback className="rounded-lg bg-secondary text-secondary-foreground">
-            <User className="h-4 w-4" aria-hidden="true" />
-          </AvatarFallback>
-        ) : (
-          <AvatarFallback className="rounded-lg bg-primary text-primary-foreground">
-            <FlaskConical className="h-4 w-4" aria-hidden="true" />
-          </AvatarFallback>
-        )}
-      </Avatar>
+     <Avatar className="mt-0.5 rounded-lg">
+  {isUser ? (
+    <AvatarFallback className="rounded-lg bg-secondary text-secondary-foreground">
+      <User className="h-4 w-4" aria-hidden="true" />
+    </AvatarFallback>
+  ) : (
+    <AvatarFallback
+      className="rounded-lg text-white font-bold text-xs"
+      style={{ background: "#000000" }}
+    >
+      L
+    </AvatarFallback>
+  )}
+</Avatar>
 
       <div
         className={cn(

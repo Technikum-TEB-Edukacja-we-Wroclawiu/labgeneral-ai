@@ -1,4 +1,4 @@
-import { FlaskConical, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { APP_DESCRIPTION, APP_NAME, EXAMPLE_QUESTIONS } from "@/lib/constants";
 
@@ -11,8 +11,11 @@ export function EmptyState({ onExampleClick, onStartNew }: EmptyStateProps) {
   return (
     <div className="flex h-full flex-col items-center justify-center overflow-y-auto px-4 py-10">
       <div className="mx-auto flex w-full max-w-xl flex-col items-center text-center">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/25">
-          <FlaskConical className="h-8 w-8" aria-hidden="true" />
+        <div
+          className="flex h-16 w-16 items-center justify-center rounded-2xl text-white font-bold text-3xl shadow-lg"
+          style={{ background: "#000000" }}
+        >
+          L
         </div>
 
         <h1 className="mt-5 text-xl font-semibold tracking-tight text-foreground sm:text-2xl">
@@ -26,7 +29,8 @@ export function EmptyState({ onExampleClick, onStartNew }: EmptyStateProps) {
         <Button
           onClick={onStartNew}
           size="lg"
-          className="mt-6 gap-2 rounded-xl px-6 shadow-sm shadow-primary/25"
+          className="mt-6 gap-2 rounded-xl px-6 shadow-sm"
+          style={{ background: "var(--color-yellow)", color: "var(--color-text)" }}
         >
           <Plus className="h-4 w-4" aria-hidden="true" />
           Rozpocznij nową rozmowę
