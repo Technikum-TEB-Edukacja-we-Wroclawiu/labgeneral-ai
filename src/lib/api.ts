@@ -6,6 +6,9 @@ import { getSessionId } from "@/lib/session";
 // DTO odpowiadające dokładnie strukturze JSON zwracanej przez backend
 // (Spring Boot: MessageResponse / ConversationResponse).
 // ────────────────────────────────────────────────────────────────────────
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "";
+
 interface BackendMessageDto {
   id: number;
   content: string;
@@ -69,7 +72,7 @@ function sessionHeaders(): HeadersInit {
 export async function fetchConversations(): Promise<Conversation[]> {
   let response: Response;
   try {
-    response = await fetch("/api/conversations", {
+    response = await fetch(`${API_BASE_URL}/api/conversations`, {
       headers: sessionHeaders(),
     });
   } catch {
@@ -82,7 +85,7 @@ export async function fetchConversations(): Promise<Conversation[]> {
 export async function fetchMessages(conversationId: string): Promise<ChatMessage[]> {
   let response: Response;
   try {
-    response = await fetch(`/api/conversations/${conversationId}/messages`, {
+    response = await fetch(`${API_BASE_URL}/api/conversations/${conversationId}/messages`, {
       headers: sessionHeaders(),
     });
   } catch {
@@ -96,7 +99,7 @@ export async function createConversation(title: string): Promise<Conversation> {
   let response: Response;
   try {
     response = await fetch(
-        `/api/conversations?title=${encodeURIComponent(title)}`,
+        `${API_BASE_URL}/api/conversations?title=${encodeURIComponent(title)}`,
         { method: "POST", headers: sessionHeaders() }
     );
   } catch {
@@ -109,7 +112,7 @@ export async function createConversation(title: string): Promise<Conversation> {
 export async function deleteConversation(conversationId: string): Promise<void> {
   let response: Response;
   try {
-    response = await fetch(`/api/conversations/${conversationId}`, {
+    response = await fetch(`${API_BASE_URL}/api/conversations/${conversationId}`, {
       method: "DELETE",
       headers: sessionHeaders(),
     });
@@ -128,7 +131,7 @@ export async function sendChatMessage(
 ): Promise<ChatMessage> {
   let response: Response;
   try {
-    response = await fetch(`/api/conversations/${conversationId}/messages`, {
+    response = await fetch(`${API_BASE_URL}/api/conversations/${conversationId}/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json", ...sessionHeaders() },
       body: JSON.stringify({ content }),
